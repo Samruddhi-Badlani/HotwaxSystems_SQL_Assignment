@@ -1,3 +1,4 @@
 Initial commit
 
+# To create a database 
 CREATE DATABASE SHOP
