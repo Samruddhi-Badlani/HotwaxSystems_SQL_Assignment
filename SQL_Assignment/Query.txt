@@ -2,3 +2,20 @@ Initial commit
 
 # To create a database 
 CREATE DATABASE SHOP
+
+# Create a table : Salespeople 
+CREATE TABLE Salespeople(
+SNUM INT PRIMARY KEY,
+SNAME VARCHAR(20) NOT NULL,
+CITY VARCHAR(20) NOT NULL,
+COMM INT NOT NULL
+);
+
+#Inserting data in salespeople
+INSERT INTO salespeople(snum,sname,city,comm) VALUES
+(1001,'Peel','London',12),
+(1002,'Serres','SanJose',13),
+(1004,'Motika','London',11),
+(1007,'Rifkin','Barcelona',15),
+(1003,'AxelRod','New York',10),
+(1008,'Fran','London',25);
