@@ -19,3 +19,25 @@ INSERT INTO salespeople(snum,sname,city,comm) VALUES
 (1007,'Rifkin','Barcelona',15),
 (1003,'AxelRod','New York',10),
 (1008,'Fran','London',25);
+
+# Create a table : customers
+CREATE TABLE customers(
+CNUM INT PRIMARY KEY,
+CNAME VARCHAR(20) NOT NULL,
+CITY VARCHAR(20) NOT NULL,
+RATING INT NOT NULL,
+SNUM INT NOT NULL,
+FOREIGN KEY(SNUM)
+REFERENCES salespeople(SNUM)
+);
+
+#Inserting data in customers
+INSERT INTO customers (CNUM,CNAME,CITY,RATING,SNUM) VALUES 
+(2001,'Hoffman','London',100,1001),
+(2002,'Giovanni','Rome',200,1003),
+(2003,'Liu','SanJose',200,1002),
+(2004,'Grass','Berlin',300,1002),
+(2006,'Clemens','London',100,1001),
+(2008,'Cisneros','SanJose',300,1007),
+(2007,'Pereira','Rome',100,1004);
+
