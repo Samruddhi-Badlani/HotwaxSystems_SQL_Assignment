@@ -96,7 +96,84 @@ INSERT INTO orders (ONUM,AMT,ODATE,CNUM,SNUM) VALUES
  
  3) Find the largest order taken by each salesperson on each date.
  
+ SELECT snum,MAX(amt),odate FROM orders GROUP BY snum,odate ORDER BY snum,MAX(amt);
  
+ snum |   max   |   odate    
+------+---------+------------
+ 1001 |  767.19 | 1990-03-10
+ 1001 | 4723.00 | 1990-05-10
+ 1001 | 9891.88 | 1990-06-10
+ 1002 |   75.75 | 1990-04-10
+ 1002 | 1309.95 | 1990-06-10
+ 1002 | 5160.45 | 1990-03-10
+ 1003 | 1713.23 | 1990-04-10
+ 1004 | 1900.10 | 1990-03-10
+ 1007 | 1098.16 | 1990-03-10
+ 
+ 4) Arrange the Order table by descending customer number.
+ 
+ SELECT * FROM orders ORDER BY cnum DESC;
+ 
+ onum |   amt   |   odate    | cnum | snum 
+------+---------+------------+------+------
+ 3006 | 1098.16 | 1990-03-10 | 2008 | 1007
+ 3001 |   18.69 | 1990-03-10 | 2008 | 1007
+ 3002 | 1900.10 | 1990-03-10 | 2007 | 1004
+ 3011 | 9891.88 | 1990-06-10 | 2006 | 1001
+ 3008 | 4723.00 | 1990-05-10 | 2006 | 1001
+ 3007 |   75.75 | 1990-04-10 | 2004 | 1002
+ 3010 | 1309.95 | 1990-06-10 | 2004 | 1002
+ 3005 | 5160.45 | 1990-03-10 | 2003 | 1002
+ 3009 | 1713.23 | 1990-04-10 | 2002 | 1003
+ 3003 |  767.19 | 1990-03-10 | 2001 | 1001
+ 
+ 5) Find which salespeople currently have orders in the order table.
+ 
+ SELECT DISTINCT(s.snum),s.sname 
+ FROM salespeople s
+ INNER JOIN orders ON orders.snum = s.snum ORDER BY s.snum;
+ 
+ snum |  sname  
+------+---------
+ 1001 | Peel
+ 1002 | Serres
+ 1003 | AxelRod
+ 1004 | Motika
+ 1007 | Rifkin
+ 
+ 6) List names of all customers matched with the salespeople serving them.
+ 
+ SELECT customers.cnum,customers.cname, salespeople.sname
+ FROM customers
+ INNER JOIN salespeople
+ ON customers.snum =  salespeople.snum ORDER BY customers.cnum;
+ 
+ cnum |  cname   |  sname  
+------+----------+---------
+ 2001 | Hoffman  | Peel
+ 2002 | Giovanni | AxelRod
+ 2003 | Liu      | Serres
+ 2004 | Grass    | Serres
+ 2006 | Clemens  | Peel
+ 2007 | Pereira  | Motika
+ 2008 | Cisneros | Rifkin
+ 
+ 7) Find the names and numbers of all salespeople who have more than one customer.
+ 
+ SELECT s.SNUM, s.SNAME 
+ FROM salespeople s 
+ WHERE  1 < (SELECT COUNT(*) 
+            FROM customers c
+            WHERE s.SNUM=c.SNUM);
+            
+ snum | sname  
+------+--------
+ 1001 | Peel
+ 1002 | Serres
+
+
+
+
  
  
  
