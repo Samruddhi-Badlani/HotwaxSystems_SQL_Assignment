@@ -170,6 +170,79 @@ INSERT INTO orders (ONUM,AMT,ODATE,CNUM,SNUM) VALUES
 ------+--------
  1001 | Peel
  1002 | Serres
+ 
+ 8) Count the orders of each of the salespeople and output the results in descending order.
+ 
+ SELECT salespeople.snum,COUNT(ONUM) FROM salespeople,orders WHERE salespeople.snum = orders.snum GROUP BY  salespeople.snum ORDER BY COUNT(ONUM) DESC ;
+ 
+ snum | count 
+------+-------
+ 1002 |     3
+ 1001 |     3
+ 1007 |     2
+ 1003 |     1
+ 1004 |     1
+ 
+ 9) List the customer table if and only if one or more of the customers in the Customer table are located in SanJose.
+ 
+ SELECT * FROM customers WHERE EXISTS ( SELECT * FROM customers WHERE city = 'SanJose' );
+ 
+ cnum |  cname   |  city   | rating | snum 
+------+----------+---------+--------+------
+ 2001 | Hoffman  | London  |    100 | 1001
+ 2002 | Giovanni | Rome    |    200 | 1003
+ 2003 | Liu      | SanJose |    200 | 1002
+ 2004 | Grass    | Berlin  |    300 | 1002
+ 2006 | Clemens  | London  |    100 | 1001
+ 2008 | Cisneros | SanJose |    300 | 1007
+ 2007 | Pereira  | Rome    |    100 | 1004
+ 
+ 10) Match salespeople to customers according to what city they live in.
+ 
+ SELECT salespeople.sname, customers.cname, salespeople.city
+ FROM salespeople
+ INNER JOIN customers
+ ON customers.city = salespeople.city;
+ 
+ sname  |  cname   |  city   
+--------+----------+---------
+ Peel   | Clemens  | London
+ Peel   | Hoffman  | London
+ Serres | Cisneros | SanJose
+ Serres | Liu      | SanJose
+ Motika | Clemens  | London
+ Motika | Hoffman  | London
+ Fran   | Clemens  | London
+ Fran   | Hoffman  | London
+ 
+ 11) Find all the customers in SanJose who have a rating above 200.
+ 
+ SELECT cnum,cname,rating,city FROM customers WHERE city = 'SanJose' AND rating > 200 ;
+ 
+ cnum |  cname   | rating |  city   
+------+----------+--------+---------
+ 2008 | Cisneros |    300 | SanJose
+ 
+ 12) List the names and commissions of all salespeople in London.
+ 
+ SELECT sname,comm FROM salespeople WHERE city = 'London';
+ 
+ sname  | comm 
+--------+------
+ Peel   |   12
+ Motika |   11
+ Fran   |   25
+ 
+ 13) List all the orders of Salesperson Motika from the orders table.
+ 
+ SELECT * FROM orders WHERE snum = ( SELECT snum FROM salespeople WHERE sname = 'Motika' );
+ 
+ onum |   amt   |   odate    | cnum | snum 
+------+---------+------------+------+------
+ 3002 | 1900.10 | 1990-03-10 | 2007 | 1004
+ 
+ 
+
 
 
 
