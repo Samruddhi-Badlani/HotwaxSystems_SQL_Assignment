@@ -241,7 +241,132 @@ INSERT INTO orders (ONUM,AMT,ODATE,CNUM,SNUM) VALUES
 ------+---------+------------+------+------
  3002 | 1900.10 | 1990-03-10 | 2007 | 1004
  
+ 14) Find all customers who booked orders on October 3.
  
+ SELECT customers.cnum,customers.cname,orders.odate FROM customers  INNER JOIN orders  ON orders.cnum = customers.cnum WHERE orders.odate = '1990-03-10';
+ 
+ cnum |  cname   |   odate    
+------+----------+------------
+ 2001 | Hoffman  | 1990-03-10
+ 2003 | Liu      | 1990-03-10
+ 2008 | Cisneros | 1990-03-10
+ 2008 | Cisneros | 1990-03-10
+ 2007 | Pereira  | 1990-03-10
+ 
+ 15) Give the sums of the amounts from the Orders table, grouped by date, eliminating all those dates where the SUM was not at least 2000 above
+     the maximum Amount.
+ 
+ SELECT SUM(amt),odate FROM orders a GROUP BY odate HAVING SUM(amt) >= 2000+(SELECT MAX(amt) FROM orders b WHERE a.odate = b.odate);
+ 
+ sum   |   odate    
+---------+------------
+ 8944.59 | 1990-03-10
+ 
+ 16) Select all orders that had amounts that were greater than at least one of the orders from October 6.
+ 
+ SELECT * FROM orders WHERE amt > ANY  ( SELECT amt FROM orders WHERE odate = '1990-06-10');
+ 
+ onum |   amt   |   odate    | cnum | snum 
+------+---------+------------+------+------
+ 3002 | 1900.10 | 1990-03-10 | 2007 | 1004
+ 3005 | 5160.45 | 1990-03-10 | 2003 | 1002
+ 3009 | 1713.23 | 1990-04-10 | 2002 | 1003
+ 3008 | 4723.00 | 1990-05-10 | 2006 | 1001
+ 3011 | 9891.88 | 1990-06-10 | 2006 | 1001
+ 
+ 17) Write a query that uses the EXISTS operator to extract all salespeople who have customers with a rating of 300
+ 
+ SELECT salespeople.snum,salespeople.sname,customers.cname,customers.rating from salespeople,customers
+ WHERE EXISTS ( SELECT customers.cname WHERE customers.snum = salespeople.snum AND customers.rating = 300);
+ 
+ snum | sname  |  cname   | rating 
+------+--------+----------+--------
+ 1002 | Serres | Grass    |    300
+ 1007 | Rifkin | Cisneros |    300
+ 
+ 18) Find all customers whose cnum is 1000 above the snum of Serres.
+ 
+ SELECT * FROM customers WHERE cnum = (SELECT 1000 +snum from salespeople WHERE sname ='Serres');
+ 
+ cnum |  cname   | city | rating | snum 
+------+----------+------+--------+------
+ 2002 | Giovanni | Rome |    200 | 1003
+ 
+ 19) Give the salespeople’s commissions as percentages instead of decimal numbers
+ 
+ SELECT snum,sname,CAST(comm AS NUMERIC)/100 from salespeople;
+ 
+ snum |  sname  |        ?column?        
+------+---------+------------------------
+ 1001 | Peel    | 0.12000000000000000000
+ 1002 | Serres  | 0.13000000000000000000
+ 1004 | Motika  | 0.11000000000000000000
+ 1007 | Rifkin  | 0.15000000000000000000
+ 1003 | AxelRod | 0.10000000000000000000
+ 1008 | Fran    | 0.25000000000000000000
+ 
+ 20) Find the largest order taken by each salesperson on each date, eliminating those Maximum orders, which are less than 3000.
+ 
+ SELECT MAX(amt),snum,odate FROM orders GROUP BY snum,odate HAVING MAX(amt) >= 3000;
+ 
+ max   | snum |   odate    
+---------+------+------------
+ 9891.88 | 1001 | 1990-06-10
+ 4723.00 | 1001 | 1990-05-10
+ 5160.45 | 1002 | 1990-03-10
+ 
+ 21) List all the largest orders for October 3, for each salesperson
+ 
+ SELECT snum,max(amt),odate FROM orders  WHERE odate = '1990-03-10' GROUP BY snum,odate;
+ 
+ snum |   max   |   odate    
+------+---------+------------
+ 1001 |  767.19 | 1990-03-10
+ 1002 | 5160.45 | 1990-03-10
+ 1004 | 1900.10 | 1990-03-10
+ 1007 | 1098.16 | 1990-03-10
+ 
+ 22) Find all customers located in cities where Serres has customers.
+ 
+ SELECT * FROM customers WHERE city  = ( SELECT city FROM salespeople WHERE sname = 'Serres');
+ 
+ cnum |  cname   |  city   | rating | snum 
+------+----------+---------+--------+------
+ 2003 | Liu      | SanJose |    200 | 1002
+ 2008 | Cisneros | SanJose |    300 | 1007
+ 
+ 23) Select all customers with a rating above 200.
+ 
+ SELECT * FROM customers WHERE rating > 200 ;
+ 
+ cnum |  cname   |  city   | rating | snum 
+------+----------+---------+--------+------
+ 2004 | Grass    | Berlin  |    300 | 1002
+ 2008 | Cisneros | SanJose |    300 | 1007
+ 
+ 24) Count the number of salespeople currently having orders in the orders table.
+ 
+ SELECT COUNT(DISTINCT(snum)) FROM orders;
+ 
+ count 
+-------
+     5
+ 25) Write a query that produces all customers serviced by salespeople with a commission above 12%. 
+ Output the customer’s name,salesperson’s name and the salesperson’s rate of commission.
+ 
+ SELECT customers.cname,salespeople.sname,salespeople.comm FROM customers JOIN salespeople ON  salespeople.snum = customers.snum AND salespeople.comm > 12;
+ 
+ cname   | sname  | comm 
+----------+--------+------
+ Liu      | Serres |   13
+ Grass    | Serres |   13
+ Cisneros | Rifkin |   15
+ 
+ 26) Find salespeople who have multiple customers.
+ 
+ 
+  
+
 
 
 
