@@ -364,8 +364,54 @@ INSERT INTO orders (ONUM,AMT,ODATE,CNUM,SNUM) VALUES
  
  26) Find salespeople who have multiple customers.
  
+ SELECT * FROM salespeople WHERE snum IN (SELECT snum FROM customers GROUP BY snum HAVING COUNT(*) > 1) ;
  
-  
+ snum | sname  |  city   | comm 
+------+--------+---------+------
+ 1001 | Peel   | London  |   12
+ 1002 | Serres | SanJose |   13
+ 
+ 27) Find salespeople with customers located in their own cities.
+ 
+ SELECT salespeople.snum,salespeople.sname,customers.cname,customers.city  FROM salespeople 
+ JOIN customers ON customers.snum = salespeople.snum AND customers.city = salespeople.city;
+ 
+ snum | sname  |  cname  |  city   
+------+--------+---------+---------
+ 1001 | Peel   | Hoffman | London
+ 1002 | Serres | Liu     | SanJose
+ 1001 | Peel   | Clemens | London
+ 
+ 28) Find all salespeople whose name starts with ‘P’ and fourth character is ‘I’.
+ 
+ SELECT * FROM salespeople WHERE sname like 'P__I%';
+ 
+ snum | sname | city | comm 
+------+-------+------+------
+
+ 29) Write a query that uses a subquery to obtain all orders for the customer named ‘Cisneros’. Assume you do not know his customer number.
+ 
+ SELECT * FROM orders WHERE cnum = ( SELECT cnum FROM customers WHERE cname = 'Cisneros');
+ 
+ onum |   amt   |   odate    | cnum | snum 
+------+---------+------------+------+------
+ 3001 |   18.69 | 1990-03-10 | 2008 | 1007
+ 3006 | 1098.16 | 1990-03-10 | 2008 | 1007
+ 
+ 30) Find the largest orders for Serres and Rifkin.
+ 
+ SELECT snum,max(amt) FROM orders GROUP BY snum HAVING snum in ( SELECT snum FROM salespeople WHERE sname = 'Serres' OR sname = 'Rifkin');
+ 
+ snum |   max   
+------+---------
+ 1002 | 5160.45
+ 1007 | 1098.16
+
+
+
+
+
+
 
 
 
