@@ -657,6 +657,218 @@ INSERT INTO orders (ONUM,AMT,ODATE,CNUM,SNUM) VALUES
  Clemens  | 1001
  Cisneros | 1007
  Pereira  | 1004
+ 
+ 46) Write a query that will give you all orders for more than $1000.00.
+ 
+ SELECT onum,amt 
+ FROM orders
+ WHERE amt > 1000;
+ 
+ onum |   amt   
+------+---------
+ 3002 | 1900.10
+ 3005 | 5160.45
+ 3006 | 1098.16
+ 3009 | 1713.23
+ 3008 | 4723.00
+ 3010 | 1309.95
+ 3011 | 9891.88
+ 
+ 47) Write a query that lists each order number followed by the name of the customer who made that order.
+ 
+ SELECT O.onum,C.cname 
+ FROM orders O
+ JOIN customers C
+ ON O.cnum = C.cnum;
+ 
+ onum |  cname   
+------+----------
+ 3001 | Cisneros
+ 3003 | Hoffman
+ 3002 | Pereira
+ 3005 | Liu
+ 3006 | Cisneros
+ 3009 | Giovanni
+ 3007 | Grass
+ 3008 | Clemens
+ 3010 | Grass
+ 3011 | Clemens
+ 
+ 48) Write a query that selects all the customers whose ratings are equal to or greater than ANY(in the SQL sense) of ‘Serres’.
+ 
+ SELECT cnum,cname 
+ FROM customers
+ WHERE rating >= ANY ( 
+ SELECT rating 
+ FROM customers
+ JOIN salespeople
+ ON salespeople.snum = customers.snum
+ AND salespeople.sname = 'Serres');
+ 
+ cnum |  cname   
+------+----------
+ 2002 | Giovanni
+ 2003 | Liu
+ 2004 | Grass
+ 2008 | Cisneros
+ 
+ 49) Write two queries that will produce all orders taken on October 3 or October 4
+ 
+ SELECT * 
+ FROM orders
+ WHERE odate = '1990-04-10'
+ 
+ 
+ SELECT * 
+ FROM orders 
+ WHERE ODATE IN ('1990-03-10','1990-04-10');OR odate = '1990-03-10';
+ 
+ onum |   amt   |   odate    | cnum | snum 
+------+---------+------------+------+------
+ 3001 |   18.69 | 1990-03-10 | 2008 | 1007
+ 3003 |  767.19 | 1990-03-10 | 2001 | 1001
+ 3002 | 1900.10 | 1990-03-10 | 2007 | 1004
+ 3005 | 5160.45 | 1990-03-10 | 2003 | 1002
+ 3006 | 1098.16 | 1990-03-10 | 2008 | 1007
+ 3009 | 1713.23 | 1990-04-10 | 2002 | 1003
+ 3007 |   75.75 | 1990-04-10 | 2004 | 1002
+ 
+ 50) Find only those customers whose ratings are higher than every customer in Rome.
+ 
+ SELECT * 
+ FROM customers
+ WHERE rating > ALL( SELECT rating FROM customers WHERE city = 'Rome');
+ 
+ cnum |  cname   |  city   | rating | snum 
+------+----------+---------+--------+------
+ 2004 | Grass    | Berlin  |    300 | 1002
+ 2008 | Cisneros | SanJose |    300 | 1007
+ 
+ 51) Write a query on the Customers table whose output will exclude all customers with a rating<= 100.00, unless they are located in Rome.
+ 
+ SELECT * 
+ FROM customers 
+ WHERE rating > 100 OR city = 'Rome';
+ 
+ cnum |  cname   |  city   | rating | snum 
+------+----------+---------+--------+------
+ 2002 | Giovanni | Rome    |    200 | 1003
+ 2003 | Liu      | SanJose |    200 | 1002
+ 2004 | Grass    | Berlin  |    300 | 1002
+ 2008 | Cisneros | SanJose |    300 | 1007
+ 2007 | Pereira  | Rome    |    100 | 1004
+ 
+ 52) Find all rows from the customer’s table for which the salesperson number is 1001.
+ 
+ SELECT *
+ FROM customers
+ WHERE snum=1001;
+ 
+ cnum |  cname  |  city  | rating | snum 
+------+---------+--------+--------+------
+ 2001 | Hoffman | London |    100 | 1001
+ 2006 | Clemens | London |    100 | 1001
+ 
+ 53) Find the total amount in orders for each salesperson where their total of amounts are greater than the amount of the largest order in the table.
+ 
+ SELECT snum,SUM(amt)
+ FROM orders 
+ GROUP BY snum 
+ HAVING SUM(amt) > ( SELECT MAX(amt) FROM orders);
+ 
+ snum |   sum    
+------+----------
+ 1001 | 15382.07
+ 
+ 54) Write a query that selects all orders save those with zeroes or NULL in the amount file.
+ 
+ SELECT * FROM orders WHERE amt IS NULL OR amt=0 ;
+ 
+ onum | amt | odate | cnum | snum 
+------+-----+-------+------+------
+ 
+ 
+ 55) Produce all combinations of salespeople and customer names such that the former precedes the latter alphabetically, and the latter has a 
+ rating of less than 200.
+ 
+ SELECT S.sname,C.cname,C.rating 
+ FROM salespeople S
+ JOIN customers C
+ ON S.snum = C.snum 
+ AND C.rating < 200 
+ ORDER BY S.sname ASC;
+ 
+ sname  |  cname  | rating 
+--------+---------+--------
+ Motika | Pereira |    100
+ Peel   | Hoffman |    100
+ Peel   | Clemens |    100
+ 
+ 56) Find all salespeople name and commission.
+ 
+ SELECT sname AS Salesperson_Name,comm AS Commision 
+ FROM salespeople;
+ 
+ salesperson_name | commision 
+------------------+-----------
+ Peel             |        12
+ Serres           |        13
+ Motika           |        11
+ Rifkin           |        15
+ AxelRod          |        10
+ Fran             |        25
+ 
+ 57) Write a query that produces the names and cities of all customers with the same rating as Hoffman. Write the query using Hoffman’s cnum
+ 
+ SELECT cname AS Customer_Name,city  
+ FROM customers
+ WHERE rating  = ( SELECT rating FROM customers WHERE cnum = 2001 );
+ 
+ customer_name |  city  
+---------------+--------
+ Hoffman       | London
+ Clemens       | London
+ Pereira       | Rome
+ 
+ 58) Find all salespeople for whom there are customers that follow them in alphabetical order.
+ 
+ SELECT S.sname,C.cname 
+ FROM salespeople S
+ JOIN customers C
+ ON S.snum = C.snum 
+ ORDER BY S.sname;
+ 
+ sname  |  cname   
+---------+----------
+ AxelRod | Giovanni
+ Motika  | Pereira
+ Peel    | Hoffman
+ Peel    | Clemens
+ Rifkin  | Cisneros
+ Serres  | Grass
+ Serres  | Liu
+ 
+ 59) Write a query that produces the names and ratings of all customers who have average orders
+ 
+ SELECT DISTINCT(cname),rating
+ FROM customers C
+ INNER JOIN orders O
+ ON C.cnum=O.cnum 
+ WHERE amt > ( SELECT AVG(amt) FROM orders);
+ 
+ cname  | rating 
+---------+--------
+ Liu     |    200
+ Clemens |    100
+ 
+ 60) Find the SUM of all Amounts from the orders table.
+ 
+ SELECT SUM(amt) FROM orders;
+ 
+ sum    
+----------
+ 26658.40
+
 
 
 
