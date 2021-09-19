@@ -294,16 +294,16 @@ INSERT INTO orders (ONUM,AMT,ODATE,CNUM,SNUM) VALUES
  
  19) Give the salespeople’s commissions as percentages instead of decimal numbers
  
- SELECT snum,sname,CAST(comm AS NUMERIC)/100 from salespeople;
- 
- snum |  sname  |        ?column?        
-------+---------+------------------------
- 1001 | Peel    | 0.12000000000000000000
- 1002 | Serres  | 0.13000000000000000000
- 1004 | Motika  | 0.11000000000000000000
- 1007 | Rifkin  | 0.15000000000000000000
- 1003 | AxelRod | 0.10000000000000000000
- 1008 | Fran    | 0.25000000000000000000
+ SELECT snum,sname,CONCAT(comm,'%') FROM salespeople;
+ snum |  sname  | concat 
+------+---------+--------
+ 1001 | Peel    | 12%
+ 1002 | Serres  | 13%
+ 1004 | Motika  | 11%
+ 1007 | Rifkin  | 15%
+ 1003 | AxelRod | 10%
+ 1008 | Fran    | 25%
+(6 rows)
  
  20) Find the largest order taken by each salesperson on each date, eliminating those Maximum orders, which are less than 3000.
  
